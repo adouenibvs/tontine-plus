@@ -1,5 +1,7 @@
 const form = document.getElementById("signup-form");
 const message = document.getElementById("form-message");
+const loginForm = document.getElementById("login-form");
+const loginMessage = document.getElementById("login-message");
 
 if (form && message) {
     form.addEventListener("submit", async (event) => {
@@ -38,5 +40,17 @@ if (form && message) {
             message.textContent = "L'envoi a echoue. Verifie l'endpoint Formspree et reessaie.";
             message.classList.remove("is-success");
         }
+    });
+}
+
+if (loginForm && loginMessage) {
+    loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const data = new FormData(loginForm);
+        const identifiant = (data.get("identifiant") || "").toString().trim();
+
+        loginMessage.textContent = `Connexion simulee pour ${identifiant || "cet utilisateur"}. La prochaine etape sera de brancher cette page a une vraie base de donnees.`;
+        loginMessage.classList.add("is-success");
     });
 }

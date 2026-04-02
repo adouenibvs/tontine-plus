@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion | Tontine Plus</title>
+    <meta name="description" content="Connectez-vous a votre espace Tontine Plus pour suivre vos adhesions et vos cotisations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <header class="hero auth-hero">
+        <nav class="topbar">
+            <a class="brand" href="index.html">Tontine Plus</a>
+            <div class="nav-links">
+                <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-cta" href="index.html#adhesion">Adherer</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-shell">
+            <div class="auth-copy">
+                <p class="eyebrow">Espace membre</p>
+                <h1>Connecte-toi pour suivre ta tontine.</h1>
+                <p class="lead">
+                    Retrouve tes adhesions, consulte tes cotisations et garde un oeil sur
+                    ton bonus de bienvenue de 300 FR.
+                </p>
+
+                <ul class="hero-points">
+                    <li>Suivi des cotisations</li>
+                    <li>Historique des adhesions</li>
+                    <li>Acces rapide et securise</li>
+                </ul>
+            </div>
+
+            <form class="signup-form auth-form" id="login-form">
+                <p class="eyebrow">Connexion</p>
+                <h2>Heureux de te revoir</h2>
+
+                <label>
+                    E-mail ou telephone
+                    <input type="text" name="identifiant" placeholder="Ex: amina@email.com" required>
+                </label>
+                <label>
+                    Mot de passe
+                    <input type="password" name="motdepasse" placeholder="Entre ton mot de passe" required>
+                </label>
+
+                <div class="auth-row">
+                    <label class="checkbox-line">
+                        <input type="checkbox" name="souvenir">
+                        <span>Rester connecte</span>
+                    </label>
+                    <a class="text-link" href="#">Mot de passe oublie ?</a>
+                </div>
+
+                <button class="button primary full" type="submit">Se connecter</button>
+                <p class="form-note" id="login-message">Entre tes informations pour acceder a ton espace membre.</p>
+                <p class="switch-note">Pas encore membre ? <a class="text-link" href="index.html#adhesion">Creer une adhesion</a></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
