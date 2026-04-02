@@ -5,5 +5,9 @@ export const firebaseConfig = {
     storageBucket: "tontine-plus-b461a.firebasestorage.app",
     messagingSenderId: "590237425395",
     appId: "1:590237425395:web:e45a1ee93546396a7de186",
-      measurementId: "G-2WEN3T6CEF"
+    measurementId: "G-2WEN3T6CEF"
 };
+
+export const adminEmails = [
+    "adouenibvs@gmail.com"
+];

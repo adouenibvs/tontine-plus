@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mot de passe oublie | Tontine Plus</title>
+    <meta name="description" content="Recevez un lien pour reinitialiser votre mot de passe Tontine Plus.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <header class="hero auth-hero">
+        <nav class="topbar">
+            <a class="brand" href="index.html">Tontine Plus</a>
+            <div class="nav-links">
+                <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-link" href="connexion.html">Connexion</a>
+                <a class="nav-link" href="inscription.html">Inscription</a>
+                <a class="nav-cta" href="inscription.html">Inscription</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-shell">
+            <div class="auth-copy">
+                <p class="eyebrow">Aide connexion</p>
+                <h1>Reinitialise ton mot de passe en quelques secondes.</h1>
+                <p class="lead">
+                    Entre ton e-mail et nous t'enverrons un lien pour choisir un nouveau mot de passe.
+                </p>
+            </div>
+
+            <form class="signup-form auth-form" id="reset-form">
+                <p class="eyebrow">Mot de passe oublie</p>
+                <h2>Recevoir un lien</h2>
+
+                <label>
+                    E-mail
+                    <input type="email" name="email" placeholder="Ex: amina@email.com" required>
+                </label>
+
+                <button class="button primary full" type="submit">Envoyer le lien</button>
+                <p class="form-note" id="reset-message">Entre ton e-mail pour recevoir le lien de reinitialisation.</p>
+            </form>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

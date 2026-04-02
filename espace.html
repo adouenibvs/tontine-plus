@@ -16,6 +16,9 @@
             <a class="brand" href="index.html">Tontine Plus</a>
             <div class="nav-links">
                 <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-link" href="inscription.html">Inscription</a>
+                <a class="nav-link" href="index.html#adhesion">Adhesion</a>
+                <a class="nav-link" href="admin.html">Admin</a>
                 <a class="nav-link" href="connexion.html">Connexion</a>
                 <button class="nav-cta nav-button" id="logout-button" type="button">Deconnexion</button>
             </div>
@@ -45,6 +48,101 @@
                     <p>Finalise une adhesion pour activer ton parcours dans la tontine.</p>
                 </article>
             </div>
+
+            <div class="panel-grid">
+                <section class="panel-card">
+                    <h2>Modifier mon profil</h2>
+                    <form class="profile-form" id="profile-form">
+                        <label>
+                            Nom complet
+                            <input type="text" name="nom" id="profile-name" required>
+                        </label>
+                        <label>
+                            Telephone
+                            <input type="tel" name="telephone" id="profile-phone" required>
+                        </label>
+                        <label>
+                            Ville
+                            <input type="text" name="ville" id="profile-city" required>
+                        </label>
+                        <button class="button primary full" type="submit">Enregistrer mon profil</button>
+                        <p class="form-note" id="profile-message">Mets a jour tes informations personnelles.</p>
+                    </form>
+                </section>
+
+                <section class="panel-card">
+                    <h2>Ajouter une cotisation</h2>
+                    <form class="profile-form" id="cotisation-form">
+                        <label>
+                            Montant
+                            <input type="number" name="montant" min="0" step="100" placeholder="Ex: 5000" required>
+                        </label>
+                        <label>
+                            Date
+                            <input type="date" name="dateCotisation" required>
+                        </label>
+                        <label>
+                            Statut
+                            <select name="statut" required>
+                                <option value="En attente">En attente</option>
+                                <option value="Validee">Validee</option>
+                                <option value="Recue">Recue</option>
+                            </select>
+                        </label>
+                        <button class="button primary full" type="submit">Ajouter la cotisation</button>
+                        <p class="form-note" id="cotisation-message">Enregistre ici tes nouvelles cotisations.</p>
+                    </form>
+                </section>
+            </div>
+
+            <section class="panel-card">
+                <h2>Mes cotisations</h2>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Montant</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cotisations-body">
+                            <tr>
+                                <td colspan="3">Aucune cotisation enregistree pour le moment.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel-card">
+                <div class="section-title-row">
+                    <div>
+                        <p class="eyebrow">Planning</p>
+                        <h2>Tableau des tours de tontine</h2>
+                    </div>
+                    <span class="badge-soft">Rotation en cours</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tour</th>
+                                <th>Beneficiaire</th>
+                                <th>Date prevue</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tours-body">
+                            <tr>
+                                <td colspan="5">Chargement des tours...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </section>
     </main>
 

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Tontine Plus</title>
+    <meta name="description" content="Tableau de bord administrateur Tontine Plus.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <header class="hero auth-hero">
+        <nav class="topbar">
+            <a class="brand" href="index.html">Tontine Plus</a>
+            <div class="nav-links">
+                <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-link" href="inscription.html">Inscription</a>
+                <a class="nav-link" href="index.html#adhesion">Adhesion</a>
+                <a class="nav-link" href="espace.html">Espace membre</a>
+                <button class="nav-cta nav-button" id="logout-button" type="button">Deconnexion</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="dashboard-card">
+            <p class="eyebrow">Administration</p>
+            <h1>Vue admin <span id="admin-name">Tontine Plus</span></h1>
+            <p class="lead" id="admin-status">Chargement des membres et des cotisations...</p>
+
+            <div class="dashboard-grid">
+                <article class="step-card">
+                    <span id="admin-user-count">0</span>
+                    <h3>Membres</h3>
+                    <p>Nombre total de comptes visibles par l'administrateur.</p>
+                </article>
+                <article class="step-card">
+                    <span id="admin-cotisation-count">0</span>
+                    <h3>Cotisations</h3>
+                    <p>Nombre total de cotisations enregistrees.</p>
+                </article>
+                <article class="step-card">
+                    <span id="admin-total-amount">0 FR</span>
+                    <h3>Montant cumule</h3>
+                    <p>Total des cotisations declarees dans l'application.</p>
+                </article>
+            </div>
+
+            <div class="panel-grid">
+                <section class="panel-card">
+                    <h2>Liste des membres</h2>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>E-mail</th>
+                                    <th>Telephone</th>
+                                    <th>Ville</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-body">
+                                <tr>
+                                    <td colspan="4">Aucune donnee pour le moment.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="panel-card">
+                    <h2>Cotisations recentes</h2>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Membre</th>
+                                    <th>Montant</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-cotisations-body">
+                                <tr>
+                                    <td colspan="4">Aucune cotisation pour le moment.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <section class="panel-card">
+                <div class="section-title-row">
+                    <div>
+                        <p class="eyebrow">Organisation</p>
+                        <h2>Tours de tontine</h2>
+                    </div>
+                    <span class="badge-soft">Vue globale</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tour</th>
+                                <th>Beneficiaire</th>
+                                <th>Date prevue</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tours-body">
+                            <tr>
+                                <td colspan="5">Chargement des tours...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

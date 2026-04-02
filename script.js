@@ -1,24 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import {
-    createUserWithEmailAndPassword,
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signOut,
-    updateProfile,
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import {
-    doc,
-    getDoc,
-    getFirestore,
-    serverTimestamp,
-    setDoc,
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js";
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const API_BASE = `${window.location.origin}/api`;
 
 const form = document.getElementById("signup-form");
 const message = document.getElementById("form-message");
@@ -26,15 +6,33 @@ const loginForm = document.getElementById("login-form");
 const loginMessage = document.getElementById("login-message");
 const registerForm = document.getElementById("register-form");
 const registerMessage = document.getElementById("register-message");
+const resetForm = document.getElementById("reset-form");
+const resetMessage = document.getElementById("reset-message");
 const memberName = document.getElementById("member-name");
 const memberCity = document.getElementById("member-city");
 const memberContact = document.getElementById("member-contact");
 const memberBonus = document.getElementById("member-bonus");
+const profileForm = document.getElementById("profile-form");
+const profileMessage = document.getElementById("profile-message");
+const cotisationForm = document.getElementById("cotisation-form");
+const cotisationMessage = document.getElementById("cotisation-message");
+const cotisationsBody = document.getElementById("cotisations-body");
+const toursBody = document.getElementById("tours-body");
+const adminName = document.getElementById("admin-name");
+const adminStatus = document.getElementById("admin-status");
+const adminUsersBody = document.getElementById("admin-users-body");
+const adminCotisationsBody = document.getElementById("admin-cotisations-body");
+const adminToursBody = document.getElementById("admin-tours-body");
+const adminUserCount = document.getElementById("admin-user-count");
+const adminCotisationCount = document.getElementById("admin-cotisation-count");
+const adminTotalAmount = document.getElementById("admin-total-amount");
+const profileNameInput = document.getElementById("profile-name");
+const profilePhoneInput = document.getElementById("profile-phone");
+const profileCityInput = document.getElementById("profile-city");
 const logoutButton = document.getElementById("logout-button");
 
-function firebaseConfigured() {
-    return !Object.values(firebaseConfig).some((value) => value.startsWith("REMPLACE_"));
-}
+const TOKEN_KEY = "tontine-plus-token";
+let currentUser = null;
 
 function setStatus(element, text, success = false) {
     if (!element) {
@@ -63,9 +61,101 @@ function setButtonLoading(formElement, isLoading, loadingText) {
     button.textContent = isLoading ? loadingText : button.dataset.defaultText;
 }
 
-async function loadMemberProfile(uid) {
-    const snapshot = await getDoc(doc(db, "users", uid));
-    return snapshot.exists() ? snapshot.data() : null;
+function saveToken(token) {
+    localStorage.setItem(TOKEN_KEY, token);
+}
+
+function loadToken() {
+    return localStorage.getItem(TOKEN_KEY);
+}
+
+function clearToken() {
+    localStorage.removeItem(TOKEN_KEY);
+}
+
+async function apiRequest(path, options = {}) {
+    const token = loadToken();
+    const headers = new Headers(options.headers || {});
+
+    if (!headers.has("Content-Type") && options.body && !(options.body instanceof FormData)) {
+        headers.set("Content-Type", "application/json");
+    }
+
+    if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+    });
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(data.detail || "Requete impossible");
+    }
+
+    return data;
+}
+
+function formatAmount(value) {
+    const amount = Number(value || 0);
+    return `${amount.toLocaleString("fr-FR")} FR`;
+}
+
+function fillTableBody(body, rows, colspan) {
+    if (!body) {
+        return;
+    }
+
+    if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="${colspan}">Aucune donnee pour le moment.</td></tr>`;
+        return;
+    }
+
+    body.innerHTML = rows.join("");
+}
+
+async function fetchMe() {
+    const token = loadToken();
+    if (!token) {
+        return null;
+    }
+
+    try {
+        currentUser = await apiRequest("/me");
+        return currentUser;
+    } catch (error) {
+        clearToken();
+        currentUser = null;
+        return null;
+    }
+}
+
+async function loadTours(body) {
+    if (!body) {
+        return;
+    }
+
+    try {
+        const tours = await apiRequest("/tours");
+        const rows = tours.map((tour) => `
+            <tr>
+                <td>${tour.tour}</td>
+                <td>${tour.beneficiaire}</td>
+                <td>${tour.date_prevue}</td>
+                <td>${formatAmount(tour.montant)}</td>
+                <td>${tour.statut}</td>
+            </tr>
+        `);
+        fillTableBody(body, rows, 5);
+    } catch (error) {
+        fillTableBody(body, [], 5);
+    }
 }
 
 if (form && message) {
@@ -108,51 +198,38 @@ if (registerForm && registerMessage) {
     registerForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        if (!firebaseConfigured()) {
-            setStatus(registerMessage, "Complete d'abord le fichier firebase-config.js avec les informations de ton projet Firebase.");
-            return;
-        }
-
         const data = new FormData(registerForm);
-        const nom = (data.get("nom") || "").toString().trim();
-        const email = (data.get("email") || "").toString().trim();
-        const telephone = (data.get("telephone") || "").toString().trim();
-        const ville = (data.get("ville") || "").toString().trim();
-        const motdepasse = (data.get("motdepasse") || "").toString();
-        const confirmation = (data.get("confirmation") || "").toString();
+        const payload = {
+            nom: (data.get("nom") || "").toString().trim(),
+            email: (data.get("email") || "").toString().trim(),
+            telephone: (data.get("telephone") || "").toString().trim(),
+            ville: (data.get("ville") || "").toString().trim(),
+            motdepasse: (data.get("motdepasse") || "").toString(),
+            confirmation: (data.get("confirmation") || "").toString(),
+        };
 
-        if (motdepasse !== confirmation) {
+        if (payload.motdepasse !== payload.confirmation) {
             setStatus(registerMessage, "Les mots de passe ne correspondent pas.");
             return;
         }
 
         setButtonLoading(registerForm, true, "Creation en cours...");
-        setStatus(registerMessage, "Creation du compte en ligne en cours. Patiente quelques secondes...");
+        setStatus(registerMessage, "Creation du compte en cours. Patiente quelques secondes...");
 
         try {
-            const credentials = await createUserWithEmailAndPassword(auth, email, motdepasse);
-            const { user } = credentials;
-
-            await updateProfile(user, {
-                displayName: nom,
+            const result = await apiRequest("/register", {
+                method: "POST",
+                body: JSON.stringify(payload),
             });
 
-            await setDoc(doc(db, "users", user.uid), {
-                nom,
-                email,
-                telephone,
-                ville,
-                bonus: "300 FR",
-                createdAt: serverTimestamp(),
-            });
-
-            setStatus(registerMessage, `${nom}, ton compte a ete cree avec succes.`, true);
+            saveToken(result.token);
+            setStatus(registerMessage, `${payload.nom}, ton compte a ete cree avec succes.`, true);
             registerForm.reset();
             window.setTimeout(() => {
                 window.location.href = "bienvenue.html";
             }, 700);
         } catch (error) {
-            setStatus(registerMessage, "Impossible de creer le compte. Verifie l'e-mail, le mot de passe ou la configuration Firebase.");
+            setStatus(registerMessage, error.message || "Impossible de creer le compte.");
         } finally {
             setButtonLoading(registerForm, false, "Creation en cours...");
         }
@@ -163,63 +240,251 @@ if (loginForm && loginMessage) {
     loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        if (!firebaseConfigured()) {
-            setStatus(loginMessage, "Complete d'abord le fichier firebase-config.js avec les informations de ton projet Firebase.");
-            return;
-        }
-
         const data = new FormData(loginForm);
-        const identifiant = (data.get("identifiant") || "").toString().trim();
-        const motdepasse = (data.get("motdepasse") || "").toString();
+        const payload = {
+            email: (data.get("identifiant") || "").toString().trim(),
+            motdepasse: (data.get("motdepasse") || "").toString(),
+        };
 
         setButtonLoading(loginForm, true, "Connexion en cours...");
         setStatus(loginMessage, "Connexion a ton espace en cours. Patiente quelques secondes...");
 
         try {
-            await signInWithEmailAndPassword(auth, identifiant, motdepasse);
+            const result = await apiRequest("/login", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            saveToken(result.token);
             setStatus(loginMessage, "Connexion reussie.", true);
 
             window.setTimeout(() => {
-                window.location.href = "espace.html";
+                window.location.href = result.user.role === "admin" ? "admin.html" : "espace.html";
             }, 700);
         } catch (error) {
-            setStatus(loginMessage, "Connexion impossible. Verifie ton e-mail, ton mot de passe et la configuration Firebase.");
+            setStatus(loginMessage, error.message || "Connexion impossible.");
         } finally {
             setButtonLoading(loginForm, false, "Connexion en cours...");
         }
     });
 }
 
-if (memberName && memberCity && memberContact && memberBonus) {
-    onAuthStateChanged(auth, async (user) => {
-        if (!firebaseConfigured()) {
-            memberName.textContent = "configuration requise";
-            memberCity.textContent = "Firebase";
-            memberContact.textContent = "Complete le fichier firebase-config.js pour activer l'espace membre.";
-            return;
-        }
+if (resetForm && resetMessage) {
+    resetForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
+        const data = new FormData(resetForm);
+        const payload = {
+            email: (data.get("email") || "").toString().trim(),
+        };
+
+        setButtonLoading(resetForm, true, "Envoi en cours...");
+        setStatus(resetMessage, "Generation du message en cours...");
+
+        try {
+            const result = await apiRequest("/password-reset", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            setStatus(resetMessage, result.message, true);
+            resetForm.reset();
+        } catch (error) {
+            setStatus(resetMessage, error.message || "Impossible de traiter la demande.");
+        } finally {
+            setButtonLoading(resetForm, false, "Envoi en cours...");
+        }
+    });
+}
+
+if (memberName && memberCity && memberContact && memberBonus) {
+    (async () => {
+        const user = await fetchMe();
         if (!user) {
             window.location.href = "connexion.html";
             return;
         }
 
-        try {
-            const profile = await loadMemberProfile(user.uid);
+        memberName.textContent = user.nom || "membre";
+        memberCity.textContent = user.ville || "Ville";
+        memberContact.textContent = `${user.email} | ${user.telephone || "Telephone non renseigne"}`;
+        memberBonus.textContent = user.bonus || "300 FR";
 
-            memberName.textContent = profile?.nom || user.displayName || "membre";
-            memberCity.textContent = profile?.ville || "Ville";
-            memberContact.textContent = `${profile?.email || user.email || ""} | ${profile?.telephone || "Telephone non renseigne"}`;
-            memberBonus.textContent = profile?.bonus || "300 FR";
+        if (profileNameInput) {
+            profileNameInput.value = user.nom || "";
+        }
+        if (profilePhoneInput) {
+            profilePhoneInput.value = user.telephone || "";
+        }
+        if (profileCityInput) {
+            profileCityInput.value = user.ville || "";
+        }
+
+        try {
+            const cotisations = await apiRequest("/cotisations");
+            const rows = cotisations.map((item) => `
+                <tr>
+                    <td>${formatAmount(item.montant)}</td>
+                    <td>${item.date_cotisation}</td>
+                    <td>${item.statut}</td>
+                </tr>
+            `);
+            fillTableBody(cotisationsBody, rows, 3);
         } catch (error) {
-            memberContact.textContent = "Impossible de charger le profil membre.";
+            fillTableBody(cotisationsBody, [], 3);
+        }
+
+        await loadTours(toursBody);
+    })();
+}
+
+if (profileForm && profileMessage) {
+    profileForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const data = new FormData(profileForm);
+        const payload = {
+            nom: (data.get("nom") || "").toString().trim(),
+            telephone: (data.get("telephone") || "").toString().trim(),
+            ville: (data.get("ville") || "").toString().trim(),
+        };
+
+        setButtonLoading(profileForm, true, "Enregistrement...");
+        setStatus(profileMessage, "Mise a jour du profil en cours...");
+
+        try {
+            const user = await apiRequest("/profile", {
+                method: "PUT",
+                body: JSON.stringify(payload),
+            });
+
+            currentUser = user;
+            memberName.textContent = user.nom;
+            memberCity.textContent = user.ville;
+            memberContact.textContent = `${user.email} | ${user.telephone}`;
+            setStatus(profileMessage, "Profil mis a jour avec succes.", true);
+        } catch (error) {
+            setStatus(profileMessage, error.message || "Impossible de mettre le profil a jour.");
+        } finally {
+            setButtonLoading(profileForm, false, "Enregistrement...");
         }
     });
 }
 
+if (cotisationForm && cotisationMessage) {
+    cotisationForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const data = new FormData(cotisationForm);
+        const payload = {
+            montant: Number((data.get("montant") || "0").toString()),
+            date_cotisation: (data.get("dateCotisation") || "").toString(),
+            statut: (data.get("statut") || "").toString(),
+        };
+
+        setButtonLoading(cotisationForm, true, "Ajout en cours...");
+        setStatus(cotisationMessage, "Enregistrement de la cotisation en cours...");
+
+        try {
+            await apiRequest("/cotisations", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            setStatus(cotisationMessage, "Cotisation ajoutee avec succes.", true);
+            cotisationForm.reset();
+
+            const cotisations = await apiRequest("/cotisations");
+            const rows = cotisations.map((item) => `
+                <tr>
+                    <td>${formatAmount(item.montant)}</td>
+                    <td>${item.date_cotisation}</td>
+                    <td>${item.statut}</td>
+                </tr>
+            `);
+            fillTableBody(cotisationsBody, rows, 3);
+        } catch (error) {
+            setStatus(cotisationMessage, error.message || "Impossible d'ajouter la cotisation.");
+        } finally {
+            setButtonLoading(cotisationForm, false, "Ajout en cours...");
+        }
+    });
+}
+
+if (adminName && adminStatus && adminUsersBody && adminCotisationsBody) {
+    (async () => {
+        const user = await fetchMe();
+        if (!user) {
+            window.location.href = "connexion.html";
+            return;
+        }
+
+        if (user.role !== "admin") {
+            adminStatus.textContent = "Acces refuse. Connecte-toi avec un compte administrateur.";
+            fillTableBody(adminUsersBody, [], 4);
+            fillTableBody(adminCotisationsBody, [], 4);
+            fillTableBody(adminToursBody, [], 5);
+            return;
+        }
+
+        adminName.textContent = user.nom || user.email || "Admin";
+
+        try {
+            const dashboard = await apiRequest("/admin/dashboard");
+            adminUserCount.textContent = `${dashboard.users.length}`;
+            adminCotisationCount.textContent = `${dashboard.cotisations.length}`;
+            adminTotalAmount.textContent = formatAmount(dashboard.total_cotisations);
+            adminStatus.textContent = "Les donnees admin ont bien ete chargees.";
+
+            const userRows = dashboard.users.map((item) => `
+                <tr>
+                    <td>${item.nom}</td>
+                    <td>${item.email}</td>
+                    <td>${item.telephone || "-"}</td>
+                    <td>${item.ville || "-"}</td>
+                </tr>
+            `);
+            fillTableBody(adminUsersBody, userRows, 4);
+
+            const cotisationRows = dashboard.cotisations.map((item) => `
+                <tr>
+                    <td>${item.nom}</td>
+                    <td>${formatAmount(item.montant)}</td>
+                    <td>${item.date_cotisation}</td>
+                    <td>${item.statut}</td>
+                </tr>
+            `);
+            fillTableBody(adminCotisationsBody, cotisationRows, 4);
+
+            const tourRows = dashboard.tours.map((tour) => `
+                <tr>
+                    <td>${tour.tour}</td>
+                    <td>${tour.beneficiaire}</td>
+                    <td>${tour.date_prevue}</td>
+                    <td>${formatAmount(tour.montant)}</td>
+                    <td>${tour.statut}</td>
+                </tr>
+            `);
+            fillTableBody(adminToursBody, tourRows, 5);
+        } catch (error) {
+            adminStatus.textContent = error.message || "Impossible de charger les donnees admin.";
+            fillTableBody(adminUsersBody, [], 4);
+            fillTableBody(adminCotisationsBody, [], 4);
+            fillTableBody(adminToursBody, [], 5);
+        }
+    })();
+}
+
 if (logoutButton) {
     logoutButton.addEventListener("click", async () => {
-        await signOut(auth);
+        try {
+            await apiRequest("/logout", { method: "POST" });
+        } catch (error) {
+            // local cleanup still matters if server session was already invalidated
+        }
+
+        clearToken();
+        currentUser = null;
         window.location.href = "connexion.html";
     });
 }
