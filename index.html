@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tontine Plus | Bonus de 300 FR</title>
+    <meta name="description" content="Rejoignez Tontine Plus et profitez d'un bonus de 300 FR a votre premiere adhesion.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="hero">
+        <nav class="topbar">
+            <div class="brand">Tontine Plus</div>
+            <a class="nav-cta" href="#adhesion">Adherer</a>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-copy">
+                <p class="eyebrow">Epargne solidaire moderne</p>
+                <h1>Ta premiere adhesion t'offre un bonus de <span>300 FR</span>.</h1>
+                <p class="lead">
+                    Une tontine simple, rapide et rassurante pour epargner en groupe,
+                    suivre tes cotisations et faire grandir tes projets.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="button primary" href="#adhesion">Commencer maintenant</a>
+                    <a class="button secondary" href="#fonctionnement">Voir comment ca marche</a>
+                </div>
+
+                <ul class="hero-points">
+                    <li>Inscription rapide</li>
+                    <li>Bonus de bienvenue de 300 FR</li>
+                    <li>Suivi clair des participations</li>
+                </ul>
+            </div>
+
+            <aside class="hero-card">
+                <p class="card-label">Offre de bienvenue</p>
+                <h2>300 FR</h2>
+                <p>Credites apres validation de ta premiere adhesion.</p>
+                <div class="stat-grid">
+                    <div>
+                        <strong>24h</strong>
+                        <span>Activation rapide</span>
+                    </div>
+                    <div>
+                        <strong>100%</strong>
+                        <span>Mobile friendly</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </header>
+
+    <main>
+        <section class="section trust">
+            <div class="section-heading">
+                <p class="eyebrow">Pourquoi nous choisir</p>
+                <h2>Une tontine pensee pour les petits comme les grands projets.</h2>
+            </div>
+
+            <div class="features">
+                <article class="feature-card">
+                    <h3>Epargne collective</h3>
+                    <p>Rejoins une communaute qui cotise regulierement pour atteindre des objectifs concrets.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Bonus de depart</h3>
+                    <p>Ta premiere adhesion te donne droit a un bonus de 300 FR pour bien commencer.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Gestion simple</h3>
+                    <p>Visualise facilement les montants, les tours de tontine et les prochaines etapes.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section steps" id="fonctionnement">
+            <div class="section-heading">
+                <p class="eyebrow">Fonctionnement</p>
+                <h2>Trois etapes pour rejoindre la tontine.</h2>
+            </div>
+
+            <div class="steps-grid">
+                <article class="step-card">
+                    <span>01</span>
+                    <h3>Inscris-toi</h3>
+                    <p>Renseigne ton nom, ton numero et choisis ton rythme de participation.</p>
+                </article>
+                <article class="step-card">
+                    <span>02</span>
+                    <h3>Active ton adhesion</h3>
+                    <p>Une fois ta premiere adhesion validee, le bonus de 300 FR est applique.</p>
+                </article>
+                <article class="step-card">
+                    <span>03</span>
+                    <h3>Participe et evolue</h3>
+                    <p>Suis les tours, les cotisations et prepare tes projets en toute simplicite.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section highlight">
+            <div class="highlight-panel">
+                <div>
+                    <p class="eyebrow">Offre limitee</p>
+                    <h2>Adhere aujourd'hui et profite de 300 FR a l'inscription.</h2>
+                </div>
+                <a class="button primary" href="#adhesion">Je veux mon bonus</a>
+            </div>
+        </section>
+
+        <section class="section signup" id="adhesion">
+            <div class="signup-copy">
+                <p class="eyebrow">Adhesion</p>
+                <h2>Commence en moins d'une minute.</h2>
+                <p>
+                    Laisse tes informations et nous te recontactons pour finaliser ton adhesion
+                    et t'expliquer comment profiter du bonus de bienvenue.
+                </p>
+            </div>
+
+            <form class="signup-form" id="signup-form">
+                <label>
+                    Nom complet
+                    <input type="text" name="nom" placeholder="Ex: Amina Kone" required>
+                </label>
+                <label>
+                    Telephone
+                    <input type="tel" name="telephone" placeholder="Ex: 0700000000" required>
+                </label>
+                <label>
+                    Ville
+                    <input type="text" name="ville" placeholder="Ex: Abidjan" required>
+                </label>
+                <label>
+                    Montant souhaite
+                    <select name="montant" required>
+                        <option value="">Choisir une option</option>
+                        <option>1 000 FR</option>
+                        <option>2 500 FR</option>
+                        <option>5 000 FR</option>
+                        <option>10 000 FR</option>
+                    </select>
+                </label>
+                <button class="button primary full" type="submit">Valider mon adhesion</button>
+                <p class="form-note" id="form-message">Le bonus de 300 FR est applique a la premiere adhesion validee.</p>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Tontine Plus</p>
+        <p>Epargne, confiance et opportunites pour tous.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
