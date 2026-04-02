@@ -1,7 +1,54 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
+    updateProfile,
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import {
+    doc,
+    getDoc,
+    getFirestore,
+    serverTimestamp,
+    setDoc,
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 const form = document.getElementById("signup-form");
 const message = document.getElementById("form-message");
 const loginForm = document.getElementById("login-form");
 const loginMessage = document.getElementById("login-message");
+const registerForm = document.getElementById("register-form");
+const registerMessage = document.getElementById("register-message");
+const memberName = document.getElementById("member-name");
+const memberCity = document.getElementById("member-city");
+const memberContact = document.getElementById("member-contact");
+const memberBonus = document.getElementById("member-bonus");
+const logoutButton = document.getElementById("logout-button");
+
+function firebaseConfigured() {
+    return !Object.values(firebaseConfig).some((value) => value.startsWith("REMPLACE_"));
+}
+
+function setStatus(element, text, success = false) {
+    if (!element) {
+        return;
+    }
+
+    element.textContent = text;
+    element.classList.toggle("is-success", success);
+}
+
+async function loadMemberProfile(uid) {
+    const snapshot = await getDoc(doc(db, "users", uid));
+    return snapshot.exists() ? snapshot.data() : null;
+}
 
 if (form && message) {
     form.addEventListener("submit", async (event) => {
@@ -12,13 +59,11 @@ if (form && message) {
         const nom = (data.get("nom") || "").toString().trim();
 
         if (!endpoint || endpoint.includes("TON_ID_ICI")) {
-            message.textContent = "Ajoute d'abord ton endpoint Formspree dans le fichier index.html pour recevoir les adhesions par e-mail.";
-            message.classList.remove("is-success");
+            setStatus(message, "Ajoute d'abord ton endpoint Formspree dans le fichier index.html pour recevoir les adhesions par e-mail.");
             return;
         }
 
-        message.textContent = "Envoi en cours...";
-        message.classList.remove("is-success");
+        setStatus(message, "Envoi en cours...");
 
         try {
             const response = await fetch(endpoint, {
@@ -33,24 +78,124 @@ if (form && message) {
                 throw new Error("Formulaire non envoye");
             }
 
-            message.textContent = `${nom || "Votre inscription"} a bien ete prise en compte. Verifie ton e-mail et ta boite Formspree pour suivre l'adhesion.`;
-            message.classList.add("is-success");
+            setStatus(message, `${nom || "Votre inscription"} a bien ete prise en compte. Verifie ton e-mail et ta boite Formspree pour suivre l'adhesion.`, true);
             form.reset();
         } catch (error) {
-            message.textContent = "L'envoi a echoue. Verifie l'endpoint Formspree et reessaie.";
-            message.classList.remove("is-success");
+            setStatus(message, "L'envoi a echoue. Verifie l'endpoint Formspree et reessaie.");
+        }
+    });
+}
+
+if (registerForm && registerMessage) {
+    registerForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!firebaseConfigured()) {
+            setStatus(registerMessage, "Complete d'abord le fichier firebase-config.js avec les informations de ton projet Firebase.");
+            return;
+        }
+
+        const data = new FormData(registerForm);
+        const nom = (data.get("nom") || "").toString().trim();
+        const email = (data.get("email") || "").toString().trim();
+        const telephone = (data.get("telephone") || "").toString().trim();
+        const ville = (data.get("ville") || "").toString().trim();
+        const motdepasse = (data.get("motdepasse") || "").toString();
+        const confirmation = (data.get("confirmation") || "").toString();
+
+        if (motdepasse !== confirmation) {
+            setStatus(registerMessage, "Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        setStatus(registerMessage, "Creation du compte en cours...");
+
+        try {
+            const credentials = await createUserWithEmailAndPassword(auth, email, motdepasse);
+            const { user } = credentials;
+
+            await updateProfile(user, {
+                displayName: nom,
+            });
+
+            await setDoc(doc(db, "users", user.uid), {
+                nom,
+                email,
+                telephone,
+                ville,
+                bonus: "300 FR",
+                createdAt: serverTimestamp(),
+            });
+
+            setStatus(registerMessage, `${nom}, ton compte a ete cree avec succes.`, true);
+            registerForm.reset();
+            window.setTimeout(() => {
+                window.location.href = "espace.html";
+            }, 700);
+        } catch (error) {
+            setStatus(registerMessage, "Impossible de creer le compte. Verifie l'e-mail, le mot de passe ou la configuration Firebase.");
         }
     });
 }
 
 if (loginForm && loginMessage) {
-    loginForm.addEventListener("submit", (event) => {
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        if (!firebaseConfigured()) {
+            setStatus(loginMessage, "Complete d'abord le fichier firebase-config.js avec les informations de ton projet Firebase.");
+            return;
+        }
 
         const data = new FormData(loginForm);
         const identifiant = (data.get("identifiant") || "").toString().trim();
+        const motdepasse = (data.get("motdepasse") || "").toString();
 
-        loginMessage.textContent = `Connexion simulee pour ${identifiant || "cet utilisateur"}. La prochaine etape sera de brancher cette page a une vraie base de donnees.`;
-        loginMessage.classList.add("is-success");
+        setStatus(loginMessage, "Connexion en cours...");
+
+        try {
+            await signInWithEmailAndPassword(auth, identifiant, motdepasse);
+            setStatus(loginMessage, "Connexion reussie.", true);
+
+            window.setTimeout(() => {
+                window.location.href = "espace.html";
+            }, 700);
+        } catch (error) {
+            setStatus(loginMessage, "Connexion impossible. Verifie ton e-mail, ton mot de passe et la configuration Firebase.");
+        }
+    });
+}
+
+if (memberName && memberCity && memberContact && memberBonus) {
+    onAuthStateChanged(auth, async (user) => {
+        if (!firebaseConfigured()) {
+            memberName.textContent = "configuration requise";
+            memberCity.textContent = "Firebase";
+            memberContact.textContent = "Complete le fichier firebase-config.js pour activer l'espace membre.";
+            return;
+        }
+
+        if (!user) {
+            window.location.href = "connexion.html";
+            return;
+        }
+
+        try {
+            const profile = await loadMemberProfile(user.uid);
+
+            memberName.textContent = profile?.nom || user.displayName || "membre";
+            memberCity.textContent = profile?.ville || "Ville";
+            memberContact.textContent = `${profile?.email || user.email || ""} | ${profile?.telephone || "Telephone non renseigne"}`;
+            memberBonus.textContent = profile?.bonus || "300 FR";
+        } catch (error) {
+            memberContact.textContent = "Impossible de charger le profil membre.";
+        }
+    });
+}
+
+if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.href = "connexion.html";
     });
 }

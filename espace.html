@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace membre | Tontine Plus</title>
+    <meta name="description" content="Retrouvez votre espace membre Tontine Plus.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <header class="hero auth-hero">
+        <nav class="topbar">
+            <a class="brand" href="index.html">Tontine Plus</a>
+            <div class="nav-links">
+                <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-link" href="connexion.html">Connexion</a>
+                <button class="nav-cta nav-button" id="logout-button" type="button">Deconnexion</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="dashboard-card">
+            <p class="eyebrow">Tableau de bord</p>
+            <h1>Bienvenue <span id="member-name">membre</span></h1>
+            <p class="lead">Voici un espace membre simple pour consulter ton compte et preparer tes prochaines actions.</p>
+
+            <div class="dashboard-grid">
+                <article class="step-card">
+                    <span id="member-bonus">300 FR</span>
+                    <h3>Bonus de bienvenue</h3>
+                    <p>Disponible apres validation de ta premiere adhesion.</p>
+                </article>
+                <article class="step-card">
+                    <span id="member-city">Ville</span>
+                    <h3>Profil membre</h3>
+                    <p id="member-contact">Informations de contact en attente.</p>
+                </article>
+                <article class="step-card">
+                    <span>1</span>
+                    <h3>Prochaine etape</h3>
+                    <p>Finalise une adhesion pour activer ton parcours dans la tontine.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
