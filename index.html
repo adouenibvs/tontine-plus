@@ -124,10 +124,14 @@
                 </p>
             </div>
 
-            <form class="signup-form" id="signup-form">
+            <form class="signup-form" id="signup-form" data-formspree-endpoint="https://formspree.io/f/xkopvzwv" method="POST">
                 <label>
                     Nom complet
                     <input type="text" name="nom" placeholder="Ex: Amina Kone" required>
+                </label>
+                <label>
+                    E-mail
+                    <input type="email" name="email" placeholder="Ex: amina@email.com" required>
                 </label>
                 <label>
                     Telephone
@@ -147,6 +151,7 @@
                         <option>10 000 FR</option>
                     </select>
                 </label>
+                <input type="hidden" name="_subject" value="Nouvelle adhesion Tontine Plus">
                 <button class="button primary full" type="submit">Valider mon adhesion</button>
                 <p class="form-note" id="form-message">Le bonus de 300 FR est applique a la premiere adhesion validee.</p>
             </form>
