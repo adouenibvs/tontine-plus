@@ -45,6 +45,24 @@ function setStatus(element, text, success = false) {
     element.classList.toggle("is-success", success);
 }
 
+function setButtonLoading(formElement, isLoading, loadingText) {
+    if (!formElement) {
+        return;
+    }
+
+    const button = formElement.querySelector('button[type="submit"]');
+    if (!button) {
+        return;
+    }
+
+    if (!button.dataset.defaultText) {
+        button.dataset.defaultText = button.textContent || "";
+    }
+
+    button.disabled = isLoading;
+    button.textContent = isLoading ? loadingText : button.dataset.defaultText;
+}
+
 async function loadMemberProfile(uid) {
     const snapshot = await getDoc(doc(db, "users", uid));
     return snapshot.exists() ? snapshot.data() : null;
@@ -108,7 +126,8 @@ if (registerForm && registerMessage) {
             return;
         }
 
-        setStatus(registerMessage, "Creation du compte en cours...");
+        setButtonLoading(registerForm, true, "Creation en cours...");
+        setStatus(registerMessage, "Creation du compte en ligne en cours. Patiente quelques secondes...");
 
         try {
             const credentials = await createUserWithEmailAndPassword(auth, email, motdepasse);
@@ -134,6 +153,8 @@ if (registerForm && registerMessage) {
             }, 700);
         } catch (error) {
             setStatus(registerMessage, "Impossible de creer le compte. Verifie l'e-mail, le mot de passe ou la configuration Firebase.");
+        } finally {
+            setButtonLoading(registerForm, false, "Creation en cours...");
         }
     });
 }
@@ -151,7 +172,8 @@ if (loginForm && loginMessage) {
         const identifiant = (data.get("identifiant") || "").toString().trim();
         const motdepasse = (data.get("motdepasse") || "").toString();
 
-        setStatus(loginMessage, "Connexion en cours...");
+        setButtonLoading(loginForm, true, "Connexion en cours...");
+        setStatus(loginMessage, "Connexion a ton espace en cours. Patiente quelques secondes...");
 
         try {
             await signInWithEmailAndPassword(auth, identifiant, motdepasse);
@@ -162,6 +184,8 @@ if (loginForm && loginMessage) {
             }, 700);
         } catch (error) {
             setStatus(loginMessage, "Connexion impossible. Verifie ton e-mail, ton mot de passe et la configuration Firebase.");
+        } finally {
+            setButtonLoading(loginForm, false, "Connexion en cours...");
         }
     });
 }
