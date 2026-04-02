@@ -310,6 +310,16 @@ a {
     box-shadow: var(--shadow);
 }
 
+.confirmation-card {
+    max-width: 760px;
+    text-align: center;
+}
+
+.confirmation-card .hero-actions {
+    justify-content: center;
+    margin-top: 28px;
+}
+
 .dashboard-card h1 {
     font-family: "DM Serif Display", serif;
     font-size: clamp(2.4rem, 4vw, 4rem);

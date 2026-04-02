@@ -149,7 +149,7 @@ if (registerForm && registerMessage) {
             setStatus(registerMessage, `${nom}, ton compte a ete cree avec succes.`, true);
             registerForm.reset();
             window.setTimeout(() => {
-                window.location.href = "espace.html";
+                window.location.href = "bienvenue.html";
             }, 700);
         } catch (error) {
             setStatus(registerMessage, "Impossible de creer le compte. Verifie l'e-mail, le mot de passe ou la configuration Firebase.");
