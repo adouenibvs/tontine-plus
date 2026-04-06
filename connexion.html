@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion | Tontine Plus</title>
-    <meta name="description" content="Connectez-vous a votre espace Tontine Plus pour suivre vos adhesions et vos cotisations.">
+    <title>Connexion | Credit Plus Banque</title>
+    <meta name="description" content="Connectez-vous a votre espace client Credit Plus Banque avec votre compte utilisateur et votre mot de passe.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -13,12 +13,12 @@
 <body class="auth-page">
     <header class="hero auth-hero">
         <nav class="topbar">
-            <a class="brand" href="index.html">Tontine Plus</a>
+            <a class="brand" href="index.html">Credit Plus Banque</a>
             <div class="nav-links">
                 <a class="nav-link" href="index.html">Accueil</a>
-                <a class="nav-link" href="inscription.html">Inscription</a>
-                <a class="nav-link" href="index.html#adhesion">Adhesion</a>
-                <a class="nav-cta" href="index.html#adhesion">Adherer</a>
+                <a class="nav-link" href="inscription.html">Ouvrir un compte</a>
+                <a class="nav-link" href="index.html#adhesion">Nos services</a>
+                <a class="nav-cta" href="inscription.html">Devenir client</a>
             </div>
         </nav>
     </header>
@@ -26,31 +26,31 @@
     <main class="auth-main">
         <section class="auth-shell">
             <div class="auth-copy">
-                <p class="eyebrow">Espace membre</p>
-                <h1>Connecte-toi pour suivre ta tontine.</h1>
+                <p class="eyebrow">Espace client</p>
+                <h1>Connexion a votre banque de credit.</h1>
                 <p class="lead">
-                    Retrouve tes adhesions, consulte tes cotisations et garde un oeil sur
-                    ton bonus de bienvenue de 300 FR.
+                    Entrez votre compte utilisateur et votre mot de passe pour acceder
+                    a votre espace client en ligne.
                 </p>
 
                 <ul class="hero-points">
-                    <li>Suivi des cotisations</li>
-                    <li>Historique des adhesions</li>
+                    <li>Consultation de compte</li>
+                    <li>Gestion des cotisations et credits</li>
                     <li>Acces rapide et securise</li>
                 </ul>
             </div>
 
             <form class="signup-form auth-form" id="login-form">
                 <p class="eyebrow">Connexion</p>
-                <h2>Heureux de te revoir</h2>
+                <h2>Identifiez-vous</h2>
 
                 <label>
-                    E-mail
-                    <input type="email" name="identifiant" placeholder="Ex: amina@email.com" required>
+                    Compte utilisateur (e-mail)
+                    <input type="email" name="identifiant" placeholder="Ex: client@creditplus.com" required>
                 </label>
                 <label>
                     Mot de passe
-                    <input type="password" name="motdepasse" placeholder="Entre ton mot de passe" required>
+                    <input type="password" name="motdepasse" placeholder="Entrez votre mot de passe" required>
                 </label>
 
                 <div class="auth-row">
@@ -62,8 +62,9 @@
                 </div>
 
                 <button class="button primary full" type="submit">Se connecter</button>
-                <p class="form-note" id="login-message">Entre tes informations pour acceder a ton espace membre.</p>
-                <p class="switch-note">Pas encore membre ? <a class="text-link" href="inscription.html">Creer un compte</a></p>
+                <p class="form-note" id="login-message">Saisissez votre compte utilisateur et votre mot de passe.</p>
+                <p class="switch-note">Pas encore client ? <a class="text-link" href="inscription.html">Creer un compte</a></p>
+                <p class="form-note">Site de demonstration - n'utilisez pas de vrais identifiants bancaires.</p>
             </form>
         </section>
     </main>
